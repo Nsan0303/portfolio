@@ -11,8 +11,8 @@ def Registration_MySQL(article_title, url, description):
     conn = mydv.connect(
         host="localhost",
         user="root",
-        password="Nsan0303",
-        database="blog_db"
+        password="pass",
+        database="db"
     )
     cur = conn.cursor()
     conn.ping(reconnect=True)

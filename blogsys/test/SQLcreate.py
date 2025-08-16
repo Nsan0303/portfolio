@@ -4,8 +4,8 @@ from mysql.connector import Error
 # MySQLサーバー情報
 host = "localhost"       # サーバーのホスト名
 user = "root"            # MySQLユーザー名
-password = "Nsan0303"  # MySQLパスワード
-database_name = "blog_db"   # 作成するデータベース名
+password = "pass"  # MySQLパスワード
+database_name = "db"   # 作成するデータベース名
 
 connection = None
 

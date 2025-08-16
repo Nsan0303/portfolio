@@ -19,8 +19,8 @@ def Check_article_existence():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Nsan0303",
-            database="blog_db"
+            password="pass",
+            database="db"
     )
         conn.autocommit = False
         sqlcommond = ("""
@@ -52,8 +52,8 @@ def fetch_articles():
             conn = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="Nsan0303",
-                database="blog_db"
+                password="pass",
+                database="db"
             )
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM URL_list_table")
@@ -147,7 +147,7 @@ def serve_post(filename):
 @app.route('/NsanBlogDev', methods=['GET', 'POST'])
 def add_article():
     if flask.request.method == 'POST':
-        DEV_PASSWORD = 'Nsan0303'  # ここにパスワードを設定
+        DEV_PASSWORD = 'DEVPASS' 
         password = flask.request.form.get('password', '')
         if not password == DEV_PASSWORD:
             #アラートにてパスワードが間違っていることを通知
@@ -162,8 +162,8 @@ def add_article():
             conn = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="Nsan0303",
-                database="blog_db"
+                password="DEVPASS",
+                database="db"
             )
             cursor = conn.cursor()
             cursor.execute(
