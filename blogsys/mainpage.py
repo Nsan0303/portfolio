@@ -2,198 +2,90 @@ import flask
 import os
 import re
 import datetime
-import mysql.connector
-import time
-import threading
+from dotenv import load_dotenv
+from flask_wtf import FlaskForm
+from wtforms import PasswordField, SubmitField
+from wtforms.validators import DataRequired
 
-app = flask.Flask(__name__)
-app.static_folder = 'static'
-app.static_url_path = '/static'
+# .envファイルの明示的なパス指定
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_USER = os.getenv('DB_USER', 'root')
+DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+DB_NAME = os.getenv('DB_NAME', 'blog_db')
+DEV_PASSWORD = os.getenv('DEV_PASSWORD', 'default_password')
 
-Blog_List = []  # グローバル記事リスト
+app = flask.Flask(
+    __name__,
+    static_folder='static',
+    static_url_path='/static',
+    template_folder='templates'
+)
 app.config['JSON_AS_ASCII'] = False  # 日本語対応
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "dev_secret")  # Flask-WTFに必須
 
-def Check_article_existence():
-    while True:
-        time.sleep(1)  # 1秒ごとに実行
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="pass",
-            database="db"
-    )
-        conn.autocommit = False
-        sqlcommond = ("""
-        DELETE
-        FROM blog_posts
-        WHERE id NOT IN (SELECT id FROM URL_list_table)
-        """)
-        if conn.is_connected():
-            try:
-                conn.ping(reconnect=True)
-            except mysql.connector.Error as e:
-                print(f"Error reconnecting to database: {e}")
-            path = 'blog-posts'
-            if not os.path.exists(path):
-                cursor = conn.cursor()
-                cursor.execute(sqlcommond)
-                conn.commit()
-                cursor.close()
-                conn.close()
+# ======== フォーム ==========
+class LoginForm(FlaskForm):
+    password = PasswordField('パスワード', validators=[DataRequired()])
+    submit = SubmitField('ログイン')
 
-def fetch_articles():
-    """
-    MySQLから記事一覧を取得し、Blog_Listを更新する
-    並列処理用の関数
-    """
-    global Blog_List
-    while True:
-        try:
-            conn = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="pass",
-                database="db"
-            )
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM URL_list_table")
-            result = cursor.fetchall()
-            Blog_List = []
-            for row in result:
-                Blog_List.append({
-                    "ID": row[0],
-                    "Title": row[1],
-                    "URL": row[2],
-                    "Description": row[3]
+# ======== 記事スキャン ==========
+def scan_drafts_articles():
+    articles = []
+    drafts_dir = os.path.join(os.path.dirname(__file__), 'drafts')
+    if not os.path.exists(drafts_dir):
+        return []
+    for root, _, files in os.walk(drafts_dir):
+        for file in files:
+            if file.endswith('.html'):
+                title = file.split('_')[0]
+                rel_path = os.path.relpath(os.path.join(root, file), drafts_dir)
+                url = f'/drafts/{rel_path.replace(os.sep, "/")}'
+                description = '説明未設定'
+                articles.append({
+                    'Title': title,
+                    'URL': url,
+                    'Description': description
                 })
-            cursor.close()
-            conn.close()
-        except Exception as e:
-            print(f"Error fetching articles: {e}")
-        time.sleep(5)  # 5秒ごとに更新
+    return articles
 
 def get_articles():
-    """
-    Blog_Listの内容から記事一覧HTMLを生成して返す
-    """
-    global Blog_List
-    articles = ""
-    for row in Blog_List:
+    articles_list = scan_drafts_articles()
+    result = []
+    for row in articles_list:
         match = re.search(r'(\d{4}_\d{2}_\d{2}_\d{2}_\d{2})', row['URL'])
         if match:
-            timestr = match.group(1)
-            dt = datetime.datetime.strptime(timestr, '%Y_%m_%d_%H_%M')
+            dt = datetime.datetime.strptime(match.group(1), '%Y_%m_%d_%H_%M')
             timeshow = dt.strftime('%Y年%m月%d日 %H:%M')
         else:
             timeshow = "日時不明"
-        articles += f'''
-        <article>
-            <img src="tmb.png">
-            <time datetime="{timestr if match else ''}">{timeshow}</time>
-            <h2><a href="{row['URL']}">{row['Title']}</a></h2>
-            <p>{row['Description']}</p>
-        </article>
-        '''
-    return articles
+        result.append({
+            "title": row["Title"],
+            "url": row["URL"],
+            "desc": row["Description"],
+            "date": timeshow,
+            "thumb": "https://picsum.photos/200/300"
+        })
+    return result
 
-# 記事取得の並列スレッド起動
-article_thread = threading.Thread(target=fetch_articles, daemon=True)
-article_thread.start()
-
+# ======== ルート ==========
 @app.route('/')
-def blog():
-    return f'''
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nsanのポートフォリオ</title>
-    <link rel="stylesheet" href="/static/blog.css">
-</head>
-<body>
-    <header class="site-header">
-        <div class="container header-flex">
-            <h1 class="logo">Nsanのポートフォリオ</h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="Works/Works.html">Works</a></li>
-                    <li><a href="#blog">Blog</a></li>
-                    <li><a href="#sns">SNS</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    <section class="blog-posts">
-        {get_articles()}
-    </section>
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2025 Nsan. All rights reserved.</p>
-            <button id="scrollTopBtn">▲ Top</button>
-        </div>
-    </footer>
-    <script src="/static/Bmain.js"></script>
-</body>
-</html>
-'''
+def index():
+    articles = get_articles()
+    return flask.render_template("index.html", articles=articles)
 
-@app.route('/posts/<path:filename>')
-def serve_post(filename):
-    return flask.send_from_directory('blog-posts', filename)
+@app.route('/NsanBlogEdit', methods=['GET', 'POST'])
+def edit_monitor_route():
+    form = LoginForm()
+    if flask.request.method == 'POST' and form.validate_on_submit():
+        if form.password.data != DEV_PASSWORD:
+            return flask.render_template("login_error.html")
+        return flask.render_template("editor.html")
+    return flask.render_template("login.html", form=form)
+	
+@app.route('/drafts/<path:filename>')
+def serve_draft(filename):
+    return flask.send_from_directory('drafts', filename)
 
-@app.route('/NsanBlogDev', methods=['GET', 'POST'])
-def add_article():
-    if flask.request.method == 'POST':
-        DEV_PASSWORD = 'DEVPASS' 
-        password = flask.request.form.get('password', '')
-        if not password == DEV_PASSWORD:
-            #アラートにてパスワードが間違っていることを通知
-            allart = "パスワードが間違っています。"
-            allart += "正しいパスワードを入力してください。"
-            return allart   
-        title = flask.request.form.get('title', 'No Title')
-        url = flask.request.form.get('url', 'No URL')
-        description = flask.request.form.get('description', '')
-        # MySQLに追加
-        try:
-            conn = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="DEVPASS",
-                database="db"
-            )
-            cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO URL_list_table (Title, URL, Description) VALUES (%s, %s, %s)",
-                (title, url, description)
-            )
-            conn.commit()
-            cursor.close()
-            conn.close()
-            return flask.redirect('/')
-        except Exception as e:
-            return f"Error: {e}"
-    # GET時はフォームを表示
-    return '''
-    <form method="post">
-        <label>タイトル: <input name="title"></label><br>
-        <label>URL: <input name="url"></label><br>
-        <label>説明: <input name="description"></label><br>
-        <label>パスワード: <input name="password" type="password"></label><br>
-        <button type="submit">追加</button>
-    </form>
-    '''
-
-# TODO: 本番環境対応のための修正項目
-# TODO パスワードやDB接続情報を環境変数で管理する
-# TODO CSRF対策（Flask-WTF等の導入）
-# TODO - HTTPS対応（SSL証明書の設定）
-# TODO WSGIサーバー（gunicorn等）で運用する
-# TODO 不要な <script src="mainpage.py"></script> の削除
-# TODO エラーハンドリング強化（ユーザー向けメッセージ表示）
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

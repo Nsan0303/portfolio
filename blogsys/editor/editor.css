@@ -1,0 +1,110 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Noto Sans JP', 'Segoe UI', Arial, sans-serif;
+	background: linear-gradient(120deg, #eaf6ff 0%, #aee2ff 100%);
+	color: #23405c;
+	line-height: 1.7;
+	font-size: 1.15rem;
+	min-height: 100vh;
+}
+.editor-container {
+	background: #fff;
+	border-radius: 18px;
+	box-shadow: 0 8px 32px rgba(99,102,241,0.10);
+	padding: 2.5em 2em;
+	margin: 3em auto;
+	max-width: 700px;
+}
+.editor-container h1 {
+	color: #2563eb;
+	font-size: 2.2em;
+	font-weight: 700;
+	text-align: center;
+	margin-bottom: 1em;
+	letter-spacing: 0.03em;
+	text-shadow: 0 2px 12px rgba(99,102,241,0.10);
+}
+.editor-container p {
+	font-size: 1.15em;
+	color: #555;
+	text-align: center;
+	margin-bottom: 2em;
+}
+.editor-btn {
+	padding: 0.7em 2em;
+	background: linear-gradient(90deg,#aee2ff 0%,#5b8ee6 100%);
+	color: #fff;
+	border: none;
+	border-radius: 14px;
+	font-weight: 700;
+	box-shadow: 0 2px 8px rgba(91,142,230,0.08);
+	margin-right: 1em;
+	cursor: pointer;
+	transition: background 0.2s, box-shadow 0.2s;
+}
+.editor-btn:last-child {
+	margin-right: 0;
+}
+.editor-btn:hover {
+	background: linear-gradient(90deg,#2563eb 0%,#6366f1 100%);
+	box-shadow: 0 4px 16px rgba(99,102,241,0.15);
+}
+input[type="text"], textarea {
+	width: 100%;
+	padding: 0.5em;
+	border-radius: 8px;
+	border: 1px solid #aee2ff;
+	font-size: 1em;
+	margin-bottom: 1em;
+	background: #f4faff;
+	box-sizing: border-box;
+}
+input[type="text"]:focus, textarea:focus {
+	outline: none;
+	border-color: #5b8ee6;
+	background: #eaf6ff;
+}
+.site-header {
+	background: linear-gradient(90deg, #aee2ff 0%, #5b8ee6 100%);
+	color: #23405c;
+	box-shadow: 0 4px 24px rgba(91,142,230,0.10);
+	border-bottom-left-radius: 32px;
+	border-bottom-right-radius: 32px;
+}
+.site-footer {
+	background: #007acc;
+	color: white;
+	padding: 1rem;
+	margin-top: 2rem;
+	text-align: center;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+#scrollTopBtn {
+	position: absolute;
+	right: 1rem;
+	bottom: 1rem;
+	background: white;
+	color: #007acc;
+	border: none;
+	border-radius: 6px;
+	padding: 0.4rem 0.8rem;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(91,142,230,0.08);
+	font-weight: 700;
+	transition: background 0.2s;
+}
+#scrollTopBtn:hover {
+	background: #e0f7ff;
+}
+@media (max-width: 700px) {
+	.editor-container {
+		padding: 1.2em 0.5em;
+		margin: 1.5em auto;
+	}
+	.editor-container h1 {
+		font-size: 1.5em;
+	}
+}

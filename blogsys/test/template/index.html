@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Nsanのポートフォリオ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Nsanのポートフォリオ</h1>
+        <!-- ナビゲーションなど -->
+    </header>
+    <section class="blog-posts">
+        <div class="article-grid">
+            {% for article in articles %}
+            <div class="article-card">
+                <img src="{{ article.thumb }}" alt="thumbnail" class="article-thumb">
+                <h2 class="article-title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+                <p class="article-desc">{{ article.desc }}</p>
+                <p class="article-date">{{ article.date }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2025 Nsan. All rights reserved.</p>
+    </footer>
+</body>
+</html>

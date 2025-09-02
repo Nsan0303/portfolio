@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ログイン - Nsanのポートフォリオ</title>
+    <link rel="stylesheet" href="/static/blog.css">
+</head>
+<body>
+    <div class="login-container" style="max-width:400px;margin:4em auto;padding:2em;border:1px solid #ccc;border-radius:8px;background:#fafafa;">
+        <h1 style="text-align:center;font-size:2em;">記事編集ログイン</h1>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div style="margin-bottom:1em;">
+                {{ form.password.label }}<br>
+                {{ form.password(style="width:100%;padding:0.5em;") }}
+            </div>
+            {{ form.submit(style="padding:0.7em 2em;background:#007bff;color:#fff;border:none;border-radius:4px;cursor:pointer;") }}
+        </form>
+    </div>
+</body>
+</html>

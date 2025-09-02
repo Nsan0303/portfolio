@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ログイン - Nsanのポートフォリオ</title>
+	<link rel="stylesheet" href="/static/blog.css">
+</head>
+<body>
+	<header class="site-header">
+		<div class="container header-flex">
+			<h1 class="logo">Nsanのポートフォリオ</h1>
+		</div>
+	</header>
+	<main>
+		<div class="login-container" style="max-width:400px;margin:4em auto;padding:2em;border-radius:18px;background:linear-gradient(90deg,#eaf6ff 0%,#aee2ff 100%);box-shadow:0 4px 24px rgba(91,142,230,0.10);">
+			<h1 style="text-align:center;font-size:2em;color:#2563eb;letter-spacing:0.03em;font-weight:700;">記事編集ログイン</h1>
+			<form method="post">
+				<!-- Flask-WTFのformタグを想定 -->
+				{{ form.hidden_tag() }}
+				<div style="margin-bottom:1em;">
+					{{ form.password.label }}<br>
+					{{ form.password(style="width:100%;padding:0.5em;border-radius:8px;border:1px solid #aee2ff;") }}
+				</div>
+				{{ form.submit(style="padding:0.7em 2em;background:linear-gradient(90deg,#aee2ff 0%,#5b8ee6 100%);color:#fff;border:none;border-radius:14px;font-weight:700;box-shadow:0 2px 8px rgba(91,142,230,0.08);cursor:pointer;") }}
+			</form>
+		</div>
+	</main>
+	<footer class="site-footer">
+		<div class="container">
+			<p>&copy; 2025 Nsan. All rights reserved.</p>
+			<button id="scrollTopBtn">▲ Top</button>
+		</div>
+	</footer>
+	<script src="/static/Bmain.js"></script>
+</body>
+</html>

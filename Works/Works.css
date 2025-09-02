@@ -121,15 +121,17 @@ a:hover {
 }
 
 /* フッター */
-.site-footer { 
-    background: #007acc; 
-    color: white; 
-    padding: 1rem; 
-    margin-top: 2rem; 
-    text-align: center; 
-    position: relative; 
-} 
-
+.site-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #007acc;
+    color: white;
+    padding: 1rem;
+    margin-top: 2rem;
+    text-align: center;
+    position: relative;
+}
 #scrollTopBtn { 
     position: absolute; 
     right: 1rem; 
@@ -165,4 +167,40 @@ a:hover {
         width: 100%;
         height: auto;
     }
+}
+body {
+    background: linear-gradient(120deg,#eaf6ff 0%,#aee2ff 100%);
+    font-family: 'Segoe UI', 'Noto Sans JP', Arial, sans-serif;
+}
+.works-section {
+    margin: 3em auto;
+    max-width: 900px;
+}
+.work-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+.work-item {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(99,102,241,0.10);
+    padding: 2em;
+    margin-bottom: 2em;
+}
+.work-img-square {
+    width: 120px;
+    height: 120px;
+    background: #eaf6ff;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 auto 1em auto;
+}
+.work-info h4 {
+    color: #2563eb;
+    font-size: 1.3em;
+    font-weight: 700;
+}
+.work-info p {
+    color: #555;
 }

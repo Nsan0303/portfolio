@@ -22,7 +22,6 @@
         </nav>
     </div>
 </header>
-
     <!-- 作品セクション -->
     <section id="works" class="works-section container">
         <h2 class="section-title">作品一覧</h2>
@@ -103,5 +102,47 @@
         <p>&copy; 2025 Nsan Portfolio</p>
         <button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Top</button>
     </footer>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Works - Nsanのポートフォリオ</title>
+    <link rel="stylesheet" href="../blogsys/static/blog.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-flex">
+            <h1 class="logo">Nsanのポートフォリオ</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="../blogsys/templates/index.html">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="works-section container">
+            <h2 style="font-size:2em;color:#2563eb;font-weight:700;text-align:center;margin-bottom:1em;">制作物一覧</h2>
+            <div class="work-list">
+                <!-- ここに作品カードを追加 -->
+                <div class="work-item" style="background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(99,102,241,0.10);padding:2em;margin-bottom:2em;">
+                    <div class="work-img-square" style="width:120px;height:120px;background:#eaf6ff;border-radius:12px;overflow:hidden;margin:0 auto 1em auto;"></div>
+                    <div class="work-info">
+                        <h4 style="color:#2563eb;font-size:1.3em;font-weight:700;">作品タイトル</h4>
+                        <p style="color:#555;">作品の説明文が入ります。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nsan. All rights reserved.</p>
+            <button id="scrollTopBtn">▲ Top</button>
+        </div>
+    </footer>
+    <script src="../blogsys/static/Bmain.js"></script>
 </body>
 </html>

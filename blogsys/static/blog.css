@@ -56,12 +56,14 @@ a:hover {
 
 /* フッター */
 .site-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     background: #007acc;
     color: white;
     padding: 1rem;
     margin-top: 2rem;
     text-align: center;
-    position: relative;
 }
 
 #scrollTopBtn {
@@ -78,4 +80,40 @@ a:hover {
 
 #scrollTopBtn:hover {
     background: #e0f7ff;
+}
+
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.article-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 1.2rem;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+.article-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+.article-thumb {
+  width: 100%;
+  max-width: 180px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.article-title {
+  font-size: 1.1em;
+  margin: 0.5em 0;
+}
+.article-desc {
+  color: #555;
+  font-size: 0.95em;
+}
+.article-time {
+  font-size: 0.85em;
+  color: #888;
 }

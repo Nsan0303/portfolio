@@ -1,79 +1,191 @@
+import flask
 import os
-import time
 import re
+import datetime
+import mysql.connector
+import time
+import threading
 
-def sanitize_filename(name: str) -> str:
-    """ファイル名に使えない文字を安全な形式に変換"""
-    return re.sub(r'[^a-zA-Z0-9_\-一-龥ぁ-んァ-ヶ]', '_', name)
+app = flask.Flask(__name__)
+app.static_folder = 'static'
+app.static_url_path = '/static'
 
-def create_file(path: str, content: str = ""):
-    """ディレクトリを作成しつつファイルを書き込む"""
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(content)
+Blog_List = []  # グローバル記事リスト
+app.config['JSON_AS_ASCII'] = False  # 日本語対応
 
-def get_template_content(template_dir: str):
-    """テンプレートファイルの内容を取得"""
-    files = {
-        "html": "template.html",
-        "css": "template.css",
-        "js": "template.js"
-    }
-    contents = {}
-    for key, filename in files.items():
-        path = os.path.join(template_dir, filename)
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"Template not found: {path}")
-        with open(path, "r", encoding="utf-8") as f:
-            contents[key] = f.read()
-    return contents
+def Check_article_existence():
+    while True:
+        time.sleep(1)  # 1秒ごとに実行
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Nsan0303",
+            database="blog_db"
+    )
+        conn.autocommit = False
+        sqlcommond = ("""
+        DELETE
+        FROM blog_posts
+        WHERE id NOT IN (SELECT id FROM URL_list_table)
+        """)
+        if conn.is_connected():
+            try:
+                conn.ping(reconnect=True)
+            except mysql.connector.Error as e:
+                print(f"Error reconnecting to database: {e}")
+            path = 'blog-posts'
+            if not os.path.exists(path):
+                cursor = conn.cursor()
+                cursor.execute(sqlcommond)
+                conn.commit()
+                cursor.close()
+                conn.close()
 
-def main():
-    # 入力
-    article_title = input("please enter the article Title: ").strip()
-    if not article_title:
-        print("Title cannot be empty.")
-        return
-
-    file_extension = input("please enter the file extension (html or md): ").strip().lower()
-
-    # 安全なファイル名に変換
-    safe_title = sanitize_filename(article_title)
-    timestamp = time.strftime("%Y_%m_%d_%H_%M")
-    base_dir = os.path.join("blogsys", "drafts", f"{safe_title}_{timestamp}")
-
-    if file_extension == "md":
-        md_dir = os.path.join(base_dir, "md")
-        md_path = os.path.join(md_dir, f"{safe_title}_{timestamp}.md")
-        md_content = f"# {article_title} {timestamp}\n"
-        create_file(md_path, md_content)
-        print(f"Markdown draft created:\n  {md_path}")
-
-    elif file_extension == "html":
-        html_dir = os.path.join(base_dir, "html")
-        template_dir = os.path.join("blogsys", "test", "template")
+def fetch_articles():
+    """
+    MySQLから記事一覧を取得し、Blog_Listを更新する
+    並列処理用の関数
+    """
+    global Blog_List
+    while True:
         try:
-            templates = get_template_content(template_dir)
-        except FileNotFoundError as e:
-            print(e)
-            return
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="Nsan0303",
+                database="blog_db"
+            )
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM URL_list_table")
+            result = cursor.fetchall()
+            Blog_List = []
+            for row in result:
+                Blog_List.append({
+                    "ID": row[0],
+                    "Title": row[1],
+                    "URL": row[2],
+                    "Description": row[3]
+                })
+            cursor.close()
+            conn.close()
+        except Exception as e:
+            print(f"Error fetching articles: {e}")
+        time.sleep(5)  # 5秒ごとに更新
 
-        html_path = os.path.join(html_dir, f"{safe_title}_{timestamp}.html")
-        css_path = os.path.join(html_dir, "style.css")
-        js_path = os.path.join(html_dir, "main.js")
+def get_articles():
+    """
+    Blog_Listの内容から記事一覧HTMLを生成して返す
+    """
+    global Blog_List
+    articles = ""
+    for row in Blog_List:
+        match = re.search(r'(\d{4}_\d{2}_\d{2}_\d{2}_\d{2})', row['URL'])
+        if match:
+            timestr = match.group(1)
+            dt = datetime.datetime.strptime(timestr, '%Y_%m_%d_%H_%M')
+            timeshow = dt.strftime('%Y年%m月%d日 %H:%M')
+        else:
+            timeshow = "日時不明"
+        articles += f'''
+        <article>
+            <img src="tmb.png">
+            <time datetime="{timestr if match else ''}">{timeshow}</time>
+            <h2><a href="{row['URL']}">{row['Title']}</a></h2>
+            <p>{row['Description']}</p>
+        </article>
+        '''
+    return articles
 
-        create_file(html_path, templates["html"])
-        create_file(css_path, templates["css"])
-        create_file(js_path, templates["js"])
+# 記事取得の並列スレッド起動
+article_thread = threading.Thread(target=fetch_articles, daemon=True)
+article_thread.start()
 
-        print("HTML draft created:")
-        print(f"  {html_path}")
-        print(f"  {css_path}")
-        print(f"  {js_path}")
+@app.route('/')
+def blog():
+    return f'''
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nsanのポートフォリオ</title>
+    <link rel="stylesheet" href="/static/blog.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-flex">
+            <h1 class="logo">Nsanのポートフォリオ</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="Works/Works.html">Works</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#sns">SNS</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="blog-posts">
+        {get_articles()}
+    </section>
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nsan. All rights reserved.</p>
+            <button id="scrollTopBtn">▲ Top</button>
+        </div>
+    </footer>
+    <script src="/static/Bmain.js"></script>
+</body>
+</html>
+'''
 
-    else:
-        print("Invalid file extension. Please enter either 'html' or 'md'.")
+@app.route('/posts/<path:filename>')
+def serve_post(filename):
+    return flask.send_from_directory('blog-posts', filename)
 
+@app.route('/NsanBlogDev', methods=['GET', 'POST'])
+def add_article():
+    if flask.request.method == 'POST':
+        DEV_PASSWORD = 'Nsan0303'  # ここにパスワードを設定
+        password = flask.request.form.get('password', '')
+        if not password == DEV_PASSWORD:
+            #アラートにてパスワードが間違っていることを通知
+            allart = "パスワードが間違っています。"
+            allart += "正しいパスワードを入力してください。"
+            return allart   
+        title = flask.request.form.get('title', 'No Title')
+        url = flask.request.form.get('url', 'No URL')
+        description = flask.request.form.get('description', '')
+        # MySQLに追加
+        try:
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="Nsan0303",
+                database="blog_db"
+            )
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO URL_list_table (Title, URL, Description) VALUES (%s, %s, %s)",
+                (title, url, description)
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return flask.redirect('/')
+        except Exception as e:
+            return f"Error: {e}"
+    # GET時はフォームを表示
+    return '''
+    <form method="post">
+        <label>タイトル: <input name="title"></label><br>
+        <label>URL: <input name="url"></label><br>
+        <label>説明: <input name="description"></label><br>
+        <label>パスワード: <input name="password" type="password"></label><br>
+        <button type="submit">追加</button>
+    </form>
+    '''
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    app.run(debug=True)

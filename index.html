@@ -3,167 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nsanのポートフォリオ</title>
+    <title>Nsan Portfolio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- ヘッダー -->
-<header class="site-header">
-    <div class="container header-flex">
-        <h1 class="logo">Nsanのポートフォリオ</h1>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="Works\Works.html">Works</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#sns">SNS</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<main>
-
-    <!-- ヒーローセクション -->
-    <section class="hero">
-        <div class="container">
-            <h2>Welcome to my portfolio</h2>
-            <p>ここではNsanの作品やブログを掲載しています</p>
+    <header class="site-header">
+        <div class="container header-flex">
+            <h1 class="logo">Nsan Portfolio</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="Works/Works.html">Works</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#sns">SNS</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </section>
+    </header>
 
-    <!-- 自己紹介 + スキル -->
-    <section id="intro" class="introduction container">
-        <div class="profile-card">
-            <div class="profile-img">
-                <img src="IndexIMG/profile.jpg" alt="Nsanのプロフィール画像">
-            </div>
-            <div class="profile-info">
-                <div class="profile-header">
+    <main>
+
+        <!-- Profile Card -->
+        <section id="intro" class="introduction container">
+            <div class="profile-card vertical-profile">
+                <div class="profile-img-square">
+                    <img src="IndexIMG/profile.jpg" alt="Nsanのプロフィール画像">
+                </div>
+                <div class="profile-info">
                     <h2>Nsan</h2>
-                    <p>開発者 / ギタリスト / VRChatプレイヤー</p>
-                </div>
-                <div class="profile-details">
-                    <p>所在地: 日本</p>
-                    <p>連絡先: <a href="https://x.com/Nsan0303">XのDMへ</a></p>
-                </div>
-                <div class="profile-message">
-                    <h3>Message</h3>
-                    <p id="message">
-                        私はPythonで開発したりギターを弾いたりVRChatをプレイしている変な人です。<br>
-                        開発では変な物を作るのが好きで一応販売もしたりしています。<br>
-                        ブログを作ったら開発やギター、VRChatのことを書いていこうと思います。<br>
-                        どうぞよろしくお願いします。
-                    </p>
-                </div>
-                <!-- スキル -->
-                <div class="skills">
-                    <h3>Skill List</h3>
-                    <table class="skill-table">
-                        <thead>
-                            <tr>
-                                <th>言語</th>
-                                <th>レベル</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>HTML・CSS</td>
-                                <td>初級（デザインセンスが壊滅的だったり一切書かないから）</td>
-                            </tr>
-                            <tr>
-                                <td>Python</td>
-                                <td>初級~中級</td>
-                            </tr>
-                            <tr>
+                    <p id="role">開発者 / ギタリスト / VRChatプレイヤー</p>
+                    <div class="profile-details" style="margin-top:1.2em;">
+                        <p>所在地: 日本</p>
+                        <p>連絡先: <a href="https://x.com/Nsan0303">XのDMへ</a></p>
+                    </div>
+                    <div class="profile-message">
+                        <h3>Message</h3>
+                        <p id="message">
+                            Pythonで開発したりギターを弾いたりVRChatをプレイしています。<br>
+                            変な物を作るのが好きで販売もしています。<br>
+                            ブログでは開発・ギター・VRChatのことを書いていきます。<br>
+                            よろしくお願いします。
+                        </p>
+                    </div>
+                    <div class="skills" style="margin-top:2em;">
+                        <h3>Skill List</h3>
+                        <table class="skill-table">
                             <thead>
-                                <tr>
-                                    <th>趣味</th>
-                                    <th>期間</th>
-                                </tr>
+                                <tr><th>言語</th><th>レベル</th></tr>
                             </thead>
-                            </tr>
-                            <tr>
-                                <td>ギター</td>
-                                <td>1年と半年くらい</td>
-                            </tr>
-                            <tr>
-                                <td>VRChat</td>
-                                <td>1年くらい</td>
-                            </tr>
-                            <tr>
-                                <td>バイク</td>
-                                <td>25年7月に免許取得</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- SNSリンク -->
-                <div id="sns" class="MySNS">
-                    <h3>My SNS</h3>
-                    <ul>
-                        <li><a href="https://x.com/Nsan0303">X</a></li>
-                        <li><a href="https://www.youtube.com/@Nsan0303">Youtube</a></li>
-                        <li><a href="https://www.twitch.tv/nsan0303">Twitch</a></li>
-                        <li><a href="https://vrchat.com/home/user/usr_d0a1417c-39e9-45bc-86f8-3cda34ef7b47">VRChat</a></li>
-                        <li><a href="https://github.com/Nsan0303">GitHub</a></li>
-                        <li><a href="https://nsan.booth.pm/">Booth</a></li>
-                    </ul>
+                            <tbody>
+                                <tr><td>HTML・CSS</td><td>初級（デザインセンス壊滅的）</td></tr>
+                                <tr><td>Python</td><td>初級~中級</td></tr>
+                            </tbody>
+                        </table>
+                        <table class="skill-table" style="margin-top:1em;">
+                            <thead>
+                                <tr><th>趣味</th><th>期間</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>ギター</td><td>1年半</td></tr>
+                                <tr><td>VRChat</td><td>1年</td></tr>
+                                <tr><td>バイク</td><td>25年7月免許取得</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="sns" class="MySNS" style="margin-top:2em;">
+                        <h3>My SNS</h3>
+                        <ul>
+                            <li><a href="https://x.com/Nsan0303">X</a></li>
+                            <li><a href="https://www.youtube.com/@Nsan0303">Youtube</a></li>
+                            <li><a href="https://www.twitch.tv/nsan0303">Twitch</a></li>
+                            <li><a href="https://vrchat.com/home/user/usr_d0a1417c-39e9-45bc-86f8-3cda34ef7b47">VRChat</a></li>
+                            <li><a href="https://github.com/Nsan0303">GitHub</a></li>
+                            <li><a href="https://nsan.booth.pm/">Booth</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 作品 -->
-    <section id="works" class="container">
-    <div class="works-section">
-
-        <h3>Works</h3>
-
-        <div class="work-list">
-            <div class="work-item">
-                <a href="" class="work-link"></a>
-                <a href="#">
-                <img src="IndexIMG/最新版撲滅君.png" alt="作品1">
-                <div class="work-info">
-                    <h4>最新版撲滅君</h4>
-                    <p>最新版撲滅君は、ファイル名に最新版とつく煩わしいファイルを作成した場合に通知してくれるアプリです。</p>
+        <!-- Works Section -->
+        <section id="works" class="container">
+            <div class="works-section">
+                <h3 class="works-title">Works</h3>
+                <div class="work-list">
+                    <div class="work-item">
+                        <div class="work-img-square">
+                            <img src="IndexIMG/最新版撲滅君.png" alt="作品1">
+                        </div>
+                        <div class="work-info">
+                            <h4>最新版撲滅君</h4>
+                            <p>最新版撲滅君は、ファイル名に最新版とつく煩わしいファイルを作成した場合に通知してくれるアプリです。</p>
+                        </div>
+                    </div>
+                    <!-- 追加作品はここに -->
                 </div>
-                </a>
             </div>
-        <!-- <div class="work-item">
-                <a href="" class="work-link"></a>
-                <a href="#">
-                <img src="IndexIMG/最新版撲滅君.png" alt="作品1">
-                <div class="work-info">
-                    <h4>最新版撲滅君</h4>
-                    <p>最新版撲滅君は、ファイル名に最新版とつく煩わしいファイルを作成した場合に通知してくれるアプリです。</p>
-                </div>
-                </a>
-            </div> -->
+        </section>
+
+        <!-- Blog Section -->
+        <section id="blog" class="container">
+            <h3 style="font-size:1.5rem;font-weight:700;color:#2563eb;margin-bottom:1em;">Blog</h3>
+            <p style="font-size:1.1rem;color:#555;">※ブログ概要を記載予定</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nsan. All rights reserved.</p>
+            <button id="scrollTopBtn">▲ Top</button>
         </div>
-    </div>
-</section>
-
-    <!-- ブログ -->
-    <section id="blog" class="container">
-        <h3>Blog</h3>
-        <p>※ブログ概要を記載予定</p>
-    </section>
-
-</main>
-
-<!-- フッター -->
-<footer class="site-footer">
-    <div class="container">
-        <p>&copy; 2025 Nsan. All rights reserved.</p>
-        <button id="scrollTopBtn">▲ Top</button>
-    </div>
-</footer>
-
-<script src="script.js"></script>
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
