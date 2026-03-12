@@ -1,0 +1,26 @@
+[Unit]
+Description=Nsan Portfolio Blog System (Flask)
+After=network.target
+
+[Service]
+# blogsys/code ディレクトリの絶対パスに合わせて変更してください
+WorkingDirectory=/path/to/portfolio/blogsys/code
+# Python の仮想環境を使用している場合は venv/bin/python に変更してください
+ExecStart=/usr/bin/python3 mainpage.py
+Restart=always
+RestartSec=5
+
+# 実行ユーザー・グループ（必要に応じて変更）
+User=www-data
+Group=www-data
+
+# 環境変数ファイルのパス（blogsys/.env）
+EnvironmentFile=/path/to/portfolio/blogsys/.env
+
+# ログの出力先
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=blogsys
+
+[Install]
+WantedBy=multi-user.target

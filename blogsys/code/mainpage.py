@@ -227,5 +227,5 @@ if __name__ == '__main__':
         conn.close()
     except Exception as e:
         print(f"[DB調査エラー] {e}")
-    # Flaskアプリ起動
-    app.run(debug=True)
+    # Flaskアプリ起動（DEBUGは環境変数で制御、本番環境では .env の DEBUG=False を設定）
+    app.run(debug=os.getenv('DEBUG', 'False').lower() == 'true')
