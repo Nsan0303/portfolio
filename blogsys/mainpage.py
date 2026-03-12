@@ -2,6 +2,7 @@ import flask
 import os
 import re
 import datetime
+import markdown
 from dotenv import load_dotenv
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, SubmitField
@@ -37,7 +38,7 @@ def scan_drafts_articles():
         return []
     for root, _, files in os.walk(drafts_dir):
         for file in files:
-            if file.endswith('.html'):
+            if file.endswith('.html') or file.endswith('.md'):
                 title = file.split('_')[0]
                 rel_path = os.path.relpath(os.path.join(root, file), drafts_dir)
                 url = f'/drafts/{rel_path.replace(os.sep, "/")}'
@@ -85,6 +86,31 @@ def edit_monitor_route():
 	
 @app.route('/drafts/<path:filename>')
 def serve_draft(filename):
+    if filename.endswith('.md'):
+        md_path = os.path.join(os.path.dirname(__file__), 'drafts', filename)
+        with open(md_path, 'r', encoding='utf-8') as f:
+            md_content = f.read()
+        html_body = markdown.markdown(md_content, extensions=['extra', 'nl2br'])
+        title = os.path.basename(filename).rsplit('_', 2)[0]
+        return flask.render_template_string("""<!DOCTYPE html>
+<html lang="ja"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/blog.css">
+</head>
+<body>
+    <header class="site-header"><div class="container header-flex">
+        <h1 class="logo">Nsanのポートフォリオ</h1>
+    </div></header>
+    <main><div class="template-container" style="max-width:760px;margin:3em auto;padding:2.5em 2em;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(99,102,241,0.10);">
+        {{ body|safe }}
+        <p style="margin-top:2em;"><a href="/">← トップへ戻る</a></p>
+    </div></main>
+    <footer class="site-footer"><div class="container">
+        <p>&copy; 2025 Nsan. All rights reserved.</p>
+    </div></footer>
+</body></html>""", title=title, body=html_body)
     return flask.send_from_directory('drafts', filename)
 
 if __name__ == "__main__":
