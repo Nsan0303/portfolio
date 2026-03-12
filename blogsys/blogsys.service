@@ -1,0 +1,22 @@
+[Unit]
+Description=Nsan Blog System (Flask)
+After=network.target mysql.service
+
+[Service]
+# blogsys ディレクトリの絶対パスに変更してください
+WorkingDirectory=/path/to/portfolio/blogsys
+# 仮想環境を使用する場合: /path/to/portfolio/blogsys/venv/bin/python3
+ExecStart=/usr/bin/python3 mainpage.py
+Restart=always
+RestartSec=5
+
+# 実行ユーザーを適切なユーザーに変更してください
+User=www-data
+Group=www-data
+
+# 環境変数ファイル (.env) の読み込み
+# 事前に権限を設定してください: chmod 600 /path/to/portfolio/blogsys/.env
+EnvironmentFile=/path/to/portfolio/blogsys/.env
+
+[Install]
+WantedBy=multi-user.target
